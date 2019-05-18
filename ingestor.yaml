@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestor
+  labels:
+    app: ingestor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingestor
+  template:
+    metadata:
+      labels:
+        app: ingestor
+    spec:
+      containers:
+      - name: ingestor
+        image: randysimpson/ingestor:1.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DB_URL
+          value: "mongodb://mongosvc:27017"
+        - name: DB_NAME
+          value: "metrics"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingestor
+  labels:
+    app: ingestor
+spec:
+  ports:
+  - protocol: TCP
+    port: 4545
+    targetPort: 3000
+  selector:
+    app: ingestor
