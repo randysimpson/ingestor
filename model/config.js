@@ -1,6 +1,6 @@
 
 const config = {
-  queuePopLength: 50,
+  queuePopLength: 75,
   queueDuration: 1000*60,
   source: "ingestor",
   version: process.env.npm_package_version,

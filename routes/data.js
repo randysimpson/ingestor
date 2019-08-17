@@ -12,17 +12,22 @@ router.use(function timeLog (req, res, next) {
     for(let i = 0; i < req.body.length; i++) {
       if(!req.body[i].date) {
         req.body[i].date = date;
+      } else {
+        req.body[i].date = new Date(req.body[i].date);
       }
     }
   } else {
     //single item
     if(!req.body.date) {
       req.body.date = date;
+    } else {
+      req.body.date = new Date(req.body.date);
     }
   }
   //console.log('Time: ', date.toLocaleString());
   next();
 });
+
 // define the post
 router.post('/', function (req, res) {
   if(router.queue) {

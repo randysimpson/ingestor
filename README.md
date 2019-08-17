@@ -1,21 +1,23 @@
-# ingestor
+# Ingestor
 
-This project was created to allow for the ingestion of metrics into a mongodb.  The metrics will be queued up when there are too many, but there is no local storage.  The purpose of this is that when there is a large amount of metrics incoming, there could be more containers added to handle the workload.
+This project was created to allow for the ingestion of metrics into a MongoDB.  The metrics will be queued up when there are too many, but there is no local storage.  The purpose of this is that when there is a large amount of metrics incoming, there could be more containers added to handle the workload.
+
+In the future the project may be modified to allow for use of PostgresSQL database.
 
 # Description
 
-When this application is running you can post metrics to port `3000` and endpoint `/api/v1/data` and the metrics will be queued and then stored into the mongodb.  These metrics do not need to have any specific format, but I would suggest that there is a name and a date associated.
+When this application is running you can post metrics to port `3000` and endpoint `/api/v1/data` and the metrics will be queued and then stored into the MongoDB.  These metrics do not need to have any specific format, but I would suggest that there is a name and a date associated.
 
 ## Prerequisites
 
-There must be a running mongodb instance running that is accessible on the network.  If you want to setup the mongodb as a deployment on Kubernetes environment, please follow the blog on https://simpsonhouse.hopto.org
+There must be a running MongoDB instance running that is accessible on the network.  The database can be setup on a dedicated machine or it could be a MongoDB cluster, or it could be a container using Persistent Volume storage on Kubernetes environment.  To setup using Kubernetes please follow the blog [Setup MongoDB on Kubernetes](https://simpsonhouse.hopto.org) on https://simpsonhouse.hopto.org
 
 ## Usage
 
 The code can be downloaded and executed or can be run as a container.  The easiest way is to run as a container by utilizing the following Kubernetes yaml file:
 
 ```
-kubectl create -f https://raw.githubusercontent.com/randysimpson/ingestor/master/ingestor.yaml
+kubectl create -f https://raw.githubusercontent.com/randysimpson/ingestor/master/ingestor.yaml --edit
 ```
 
 ## Variables
@@ -46,15 +48,15 @@ npm start
 
 ## Docker
 
-To run the ingestor as a container then issue the following command:
+To run the Ingestor as a container then issue the following command:
 
 ```sh
-docker run -ti randysimpson/ingestor:1.0 -e "DB_URL=mongodb://mongosvc:27017" -e "DB_NAME=metrics"
+docker run -e "DB_URL=mongodb://mongosvc:27017" -e "DB_NAME=metrics" -p 3000:3000 -d randysimpson/ingestor:latest
 ```
 
 ## Kubernetes
 
-Creating a deployment for the ingestor if you are using the DB_URL of `mongodb://mongosvc:27017` and DB_NAME of `metrics`:
+Creating a deployment for the Ingestor if you are using the DB_URL of `mongodb://mongosvc:27017` and DB_NAME of `metrics`:
 
 ```sh
 kubectl create -f https://raw.githubusercontent.com/randysimpson/ingestor/master/ingestor.yaml
@@ -64,7 +66,7 @@ The yaml file includes a deployment as well as a service and can be found at htt
 
 #### Scale Deployment
 
-To scale the deployment you will only need to adjust the number of ingestors:
+To scale the deployment you will only need to adjust the number of Ingestors:
 
 ```sh
 kubectl scale deployment.v1.apps/ingestor --replicas=3

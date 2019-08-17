@@ -10,7 +10,7 @@ const dataQueue = {
     let rtnList = [];
     const length = dataQueue.list.length;
     if(length > 0) {
-      if(number <= length) {
+      if(number >= length) {
         rtnList = [...dataQueue.list];
       } else {
         rtnList = [...dataQueue.list.slice(0, number)];
@@ -35,14 +35,14 @@ const dataQueue = {
       items.push({
         tags: {podName: config.podName},
         source: config.source,
-        metric: "queue.save",
+        metric: "queue.size",
         value: dataQueue.list.length,
         date: date
       });
       items.push({
         tags: {podName: config.podName},
         source: config.source,
-        metric: "queue.size",
+        metric: "queue.save",
         value: items.length,
         date: date
       });

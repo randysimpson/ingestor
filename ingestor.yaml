@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: ingestor
-        image: randysimpson/ingestor:1.0
+        image: randysimpson/ingestor:latest
         ports:
         - containerPort: 3000
         env:
