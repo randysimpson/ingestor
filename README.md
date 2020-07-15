@@ -4,7 +4,7 @@ This project was created to allow for the ingestion of metrics into a MongoDB.  
 
 In the future the project may be modified to allow for use of PostgresSQL database.
 
-# Description
+## Description
 
 When this application is running you can post metrics to port `3000` and endpoint `/api/v1/data` and the metrics will be queued and then stored into the MongoDB.  These metrics do not need to have any specific format, but I would suggest that there is a name and a date associated.
 
@@ -35,6 +35,14 @@ This is the name for the database where the metrics will be stored.  An example 
 ##### POD_NAME
 
 Optional parameter for the pod name to report metrics about the queue.
+
+##### QUEUE_POP_COUNT
+
+Optional parameter for the number of queued items to be pop'd off the stack at a time, default is 75.
+
+##### QUEUE_DURATION
+
+Optional parameter for the duration in ms to wait before pushing the metrics to the database, default is 60000 ms (1 min).
 
 ## Download the code
 

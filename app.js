@@ -13,6 +13,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //define the API
 app.use('/api/v1/data', dataRoute);
+app.post('/api/v1/config', (req, res) => {
+  const postData = req.body;
+  if(postData.queuePopCount) {
+    //modify config.
+    dataQueue.config.queuePopCount = postData.queuePopCount;
+  }
+  if(postData.queueDuration) {
+    //modify config.
+    dataQueue.config.queueDuration = postData.queueDuration;
+  }
+  res.json("success");
+});
 
 app.get('/', (req, res) => res.send('Hello World!'));
 

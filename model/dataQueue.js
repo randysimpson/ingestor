@@ -1,10 +1,14 @@
 const config = require('./config');
 const saveData = require('../controller/saveData');
+const latestData = require('./latestData');
 
 const dataQueue = {
   list: [],
+  dataCache: latestData,
+  config: config,
   addItem: (item) => {
     dataQueue.list.push(item);
+    dataQueue.dataCache.addItem(item);
   },
   getItems: (number) => {
     let rtnList = [];
@@ -15,33 +19,33 @@ const dataQueue = {
       } else {
         rtnList = [...dataQueue.list.slice(0, number)];
       }
-      dataQueue.list = dataQueue.list.filter(i => !rtnList.includes(i));
+      dataQueue.list = [...dataQueue.list.slice(number + 1)];
     }
     return rtnList;
   },
   run: () => {
     //add a metric to mark the launch of run.
     dataQueue.addItem({
-      tags: {podName: config.podName},
-      source: config.source,
+      tags: {podName: dataQueue.config.podName},
+      source: dataQueue.config.source,
       metric: "app.start",
-      value: config.version,
+      value: dataQueue.config.version,
       date: new Date()
     });
     //launch the inerval to dequeue.
     setInterval(() => {
       const date = new Date();
-      const items = dataQueue.getItems(config.queuePopLength);
+      const items = dataQueue.getItems(dataQueue.config.queuePopCount);
       items.push({
-        tags: {podName: config.podName},
-        source: config.source,
+        tags: {podName: dataQueue.config.podName},
+        source: dataQueue.config.source,
         metric: "queue.size",
         value: dataQueue.list.length,
         date: date
       });
       items.push({
-        tags: {podName: config.podName},
-        source: config.source,
+        tags: {podName: dataQueue.config.podName},
+        source: dataQueue.config.source,
         metric: "queue.save",
         value: items.length,
         date: date
@@ -54,7 +58,7 @@ const dataQueue = {
           //error
           console.error(err);
         })
-    }, config.queueDuration)
+    }, dataQueue.config.queueDuration)
   }
 };
 

@@ -40,11 +40,25 @@ router.post('/', function (req, res) {
       //single item
       router.queue.addItem(req.body);
     }
+    res.json({
+      'body': req.body
+    });
+  } else {
+    res.status(500).json({
+      message: 'Queue not setup yet.'
+    });
   }
-  res.json({
-    'body': req.body
-  });
-  //console.log(req.body);
 });
+
+router.get('/latest', (req, res) => {
+  if(router.queue) {
+    const latestData = router.queue.dataCache.getItems();
+    res.json(latestData);
+  } else {
+    res.status(500).json({
+      message: 'Queue not setup yet.'
+    });
+  }
+})
 
 module.exports = router

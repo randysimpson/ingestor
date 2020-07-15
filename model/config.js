@@ -1,7 +1,7 @@
 
 const config = {
-  queuePopLength: 75,
-  queueDuration: 1000*60,
+  queuePopCount: process.env.QUEUE_POP_COUNT ? parseInt(process.env.QUEUE_POP_COUNT) : 75,
+  queueDuration: process.env.QUEUE_DURATION ? parseInt(process.env.QUEUE_DURATION) : 60000,
   source: "ingestor",
   version: process.env.npm_package_version,
   podName: process.env.POD_NAME || "unknown",
