@@ -8,7 +8,11 @@ const latestData = {
         return false;
       }
       //check tags
-      return isEquivalent(item.tags, metric.tags);
+      if(item.tags) {
+        return isEquivalent(item.tags, metric.tags);
+      } else {
+        return true;
+      }
     });
     if (existingItem.length > 0) {
       if (existingItem[0].date < item.date) {
@@ -29,6 +33,9 @@ const latestData = {
 //basic approach for comparing js objects
 //http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
 const isEquivalent = (a, b) => {
+  if(!b) {
+    return false;
+  }
   // Create arrays of property names
   var aProps = Object.getOwnPropertyNames(a);
   var bProps = Object.getOwnPropertyNames(b);
