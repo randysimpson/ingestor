@@ -23,6 +23,9 @@ app.post('/api/v1/config', (req, res) => {
     //modify config.
     dataQueue.config.queueDuration = postData.queueDuration;
   }
+  if(postData.dbRetry) {
+    dataQueue.config.dbRetry = postData.dbRetry;
+  }
   res.json("success");
 });
 

@@ -7,7 +7,7 @@ const saveData = (data) => {
     // Use connect method to connect to the server
     MongoClient.connect(config.dburl, function(err, client) {
       if(err) {
-        reject(err);
+        return reject(err);
       }
       const db = client.db(config.database);
 
@@ -16,7 +16,7 @@ const saveData = (data) => {
       // Insert the data
       collection.insertMany(data, function(err, result) {
         if(err) {
-          reject(err);
+          return reject(err);
         }
         resolve(result);
       });

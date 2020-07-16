@@ -6,7 +6,8 @@ const config = {
   version: process.env.npm_package_version,
   podName: process.env.POD_NAME || "unknown",
   dburl: process.env.DB_URL,
-  database: process.env.DB_NAME || "ingestor"
+  database: process.env.DB_NAME || "ingestor",
+  dbRetry: 3
 };
 
 module.exports = config;

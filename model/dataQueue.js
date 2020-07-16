@@ -57,6 +57,21 @@ const dataQueue = {
         }, (err) => {
           //error
           console.error(err);
+          //retry config.dbRetry times.
+          const promises = [];
+          for(let i = 0; i < dataQueue.config.dbRetry; i++) {
+            promises.push(saveData(items));
+          }
+          let isDone = false;
+          for(let i = 0; i < promises.length && !isDone; i++) {
+            promises[i].then((result) => {
+              isDone = true;
+              console.log('success items: ' + items.length + ', retry: ' + (i + 1));
+            })
+          }
+          if(!isDone) {
+            console.error(`Failed to save; after ${promises.length} retrys`);
+          }
         })
     }, dataQueue.config.queueDuration)
   }
