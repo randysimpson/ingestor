@@ -1,10 +1,13 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
-  dataQueue = require('./model/dataQueue');
+  dataQueue = require('./model/dataQueue'),
+  httpAPI = require('./controller/httpAPI');
 
 const app = express();
 const port = 3000;
 const dataRoute = require('./routes/data');
+const config = require('./model/config');
+const { exec } = require('child_process');
 dataRoute.queue = dataQueue;
 dataQueue.run();
 
@@ -15,15 +18,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/v1/data', dataRoute);
 app.post('/api/v1/config', (req, res) => {
   const postData = req.body;
-  if(postData.queuePopCount) {
+  if (postData.queuePopCount) {
     //modify config.
     dataQueue.config.queuePopCount = postData.queuePopCount;
   }
-  if(postData.queueDuration) {
+  if (postData.queueDuration) {
     //modify config.
     dataQueue.config.queueDuration = postData.queueDuration;
   }
-  if(postData.dbRetry) {
+  if (postData.dbRetry) {
     dataQueue.config.dbRetry = postData.dbRetry;
   }
   res.json("success");
@@ -36,7 +39,7 @@ app.use(function (req, res) {
 
   // respond with html page
   if (req.accepts('html')) {
-      const html = `
+    const html = `
 <!doctype html>
 <html>
 
@@ -50,14 +53,14 @@ app.use(function (req, res) {
   </div>
 </body>
 </html>`;
-      res.send(html);
-      return;
+    res.send(html);
+    return;
   }
 
   // respond with json
   if (req.accepts('json')) {
-      res.send({ error: 'Not found' });
-      return;
+    res.send({ error: 'Not found' });
+    return;
   }
 
   // default to plain-text. send()
@@ -65,3 +68,34 @@ app.use(function (req, res) {
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+//check to see if startNotifyHost is set.
+if (config.startNotifyHost && config.startNotifyPort && config.startNotifyPath) {
+  if (!config.ip) {
+    //query to find the ip #hostname -I
+    exec('hostname -I', (error, stdout) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      //send the ip, date, podName, and version.
+      const headers = {
+        "Content-Type": "application/json"
+      };
+      const data = {
+        ip: stdout,
+        date: new Date(),
+        podName: config.podName,
+        version: config.version
+      };
+      httpAPI.httpPost(config.startNotifyHost, config.startNotifyPort, config.startNotifyPath, headers, data).then(() => {
+        console.log("Posted initial start message");
+      }, (err) => console.error({
+        date: new Date(),
+        message: "Error posting initial start message",
+        data,
+        err
+      }));
+    });
+  }
+}

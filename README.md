@@ -44,6 +44,22 @@ Optional parameter for the number of queued items to be pop'd off the stack at a
 
 Optional parameter for the duration in ms to wait before pushing the metrics to the database, default is 60000 ms (1 min).
 
+##### IP
+
+Optional the ip can be passed into the container as an environment variable, if not the system will use `hostname -I` to find the ip.
+
+##### START_NOTIFY_HOST
+
+Optional if on startup there should be a post message detailing the ip of this container, host parameter is required.
+
+##### START_NOTIFY_PORT
+
+Optional if on startup there should be a post message detailing the ip of this container, port parameter is required.
+
+##### START_NOTIFY_PATH
+
+Optional if on startup there should be a post message detailing the ip of this container, path parameter is required.
+
 ## Download the code
 
 The code can be downloaded by using:
@@ -80,6 +96,19 @@ To scale the deployment you will only need to adjust the number of Ingestors:
 kubectl scale deployment.v1.apps/ingestor --replicas=3
 ```
 
+## Version
+
+### 1.3.0
+
+7/17/2020
+
+- Updated base docker image from 9.2 into 14.5.
+- Added the ability to send the ip on start, which can be used to notify a service of the ip for querying the latest cache.
+
+### 1.2.0
+
+- Added ability to hold a cache of the most recent metrics ingested, which can be queried at `/api/v1/metrics/latest`.
+
 #### Copyright
 
-Copyright (©) 2019 - Randall Simpson
+Copyright (©) 2019, 2020 - Randall Simpson

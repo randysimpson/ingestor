@@ -7,7 +7,11 @@ const config = {
   podName: process.env.POD_NAME || "unknown",
   dburl: process.env.DB_URL,
   database: process.env.DB_NAME || "ingestor",
-  dbRetry: 3
+  dbRetry: 3,
+  ip: process.env.IP || false,
+  startNotifyHost: process.env.START_NOTIFY_HOST || false,
+  startNotifyPort: process.env.START_NOTIFY_PORT ? parseInt(process.env.START_NOTIFY_PORT) : false,
+  startNotifyPath: process.env.START_NOTIFY_PATH || false
 };
 
 module.exports = config;
