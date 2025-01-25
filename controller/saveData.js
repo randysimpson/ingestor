@@ -44,8 +44,8 @@ const saveMetricsPg = (data) => {
   // setup the connection pool
   const pool = new Pool({
     user: config.dbuser,
-    host: config.dbhost,
-    database: config.dbname,
+    host: config.dburl,
+    database: config.database,
     password: config.dbpass,
     port: parseInt(config.dbport)
   });

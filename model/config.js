@@ -9,7 +9,6 @@ const config = {
   database: process.env.DB_NAME || "ingestor",
   dbRetry: 3,
   dbtype: process.env.DB_TYPE || 'mongo',
-  dbhost: process.env.DB_HOST || "unknown",
   dbport: process.env.DB_PORT || "unknown",
   dbuser: process.env.DB_USER || "unknown",
   dbpass: process.env.DB_PASS || "unknown",
