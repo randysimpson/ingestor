@@ -28,8 +28,8 @@ const dataQueue = {
     dataQueue.addItem({
       tags: {podName: dataQueue.config.podName},
       source: dataQueue.config.source,
-      metric: "app.start",
-      value: dataQueue.config.version,
+      metric: "app.start.version." + dataQueue.config.version,
+      value: 1,
       date: new Date()
     });
     //launch the inerval to dequeue.
